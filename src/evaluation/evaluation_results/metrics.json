@@ -1,0 +1,11 @@
+{
+    "field_accuracy": 1.0,
+    "exact_match_accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "json_validity": 1.0,
+    "total_examples": 50,
+    "correct_examples": 50,
+    "valid_json_examples": 50
+}

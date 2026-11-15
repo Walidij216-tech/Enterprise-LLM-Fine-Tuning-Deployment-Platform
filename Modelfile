@@ -1,0 +1,67 @@
+
+# =========================================================
+# 1. BASE MODEL
+# =========================================================
+
+# Specifies the GGUF file containing the fine-tuned model.
+# Ollama loads this file as the base model.
+#
+# The path is relative to the directory where the Modelfile
+# is located (or the build context used by Ollama).
+
+FROM ./gguf_model/Phi-3-mini-4k-instruct.Q4_K_M.gguf
+
+
+# =========================================================
+# 2. GENERATION PARAMETERS
+# =========================================================
+
+# Controls the randomness of generated responses.
+# Lower values (e.g., 0.2) produce more deterministic outputs.
+# Higher values (e.g., 0.9) produce more creative responses.
+PARAMETER temperature 0.7
+
+
+# Controls nucleus sampling.
+# The model considers tokens whose cumulative probability
+# reaches the specified threshold.
+# Lower values restrict token selection.
+PARAMETER top_p 0.9
+
+
+# =========================================================
+# 3. STOP SEQUENCES
+# =========================================================
+
+# Stops generation when the specified token is generated.
+# This token marks the end of the model's response.
+PARAMETER stop "<|end_of_text|>"
+
+
+# Stops generation when a new user message begins.
+# Prevents the model from generating beyond its response.
+PARAMETER stop "<|user|>"
+
+
+# =========================================================
+# 4. PROMPT TEMPLATE
+# =========================================================
+
+# Defines how Ollama structures the input prompt
+# before sending it to the model.
+#
+# .Prompt represents the user's input.
+
+TEMPLATE """<|user|>
+{{ .Prompt }}<|assistant|>
+"""
+
+
+# =========================================================
+# 5. SYSTEM INSTRUCTION
+# =========================================================
+
+# Defines the assistant's general behavior.
+# This instruction is applied as the system prompt.
+
+SYSTEM """You are a helpful AI assistant."""
