@@ -1,4 +1,5 @@
 
+
 from pathlib import Path
 
 
@@ -47,18 +48,35 @@ class ModelSaver:
             quantization_method="q4_k_m"
         )
 
+        # Unsloth generates the GGUF file in a sibling directory
+        gguf_output_dir = Path(
+            f"{self.gguf_dir}_gguf"
+        )
+
         # Verify GGUF export
         gguf_files = list(
-            self.gguf_dir.rglob("*.gguf")
+            gguf_output_dir.rglob("*.gguf")
         )
 
         if not gguf_files:
             raise FileNotFoundError(
                 f"No GGUF file found in "
-                f"{self.gguf_dir.resolve()}."
+                f"{gguf_output_dir.resolve()}."
             )
 
-        gguf_file = gguf_files[0]
+        # Select the Q4_K_M quantized model
+        quantized_files = [
+            file for file in gguf_files
+            if "Q4_K_M" in file.name.upper()
+        ]
+
+        if not quantized_files:
+            raise FileNotFoundError(
+                f"No Q4_K_M GGUF file found in "
+                f"{gguf_output_dir.resolve()}."
+            )
+
+        gguf_file = quantized_files[0]
 
         print("\nGGUF export completed successfully!")
         print(f"GGUF model: {gguf_file.resolve()}")
